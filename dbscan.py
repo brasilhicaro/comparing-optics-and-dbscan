@@ -17,7 +17,7 @@ class Dbscan:
         return self.__data_firms
     
     def __get_results__(self)->pd.DataFrame:
-        df = pd.DataFrame(self.__data_firms, columns=['latitude', 'longitude'])
+        df: pd.DataFrame = pd.DataFrame(self.__data_firms, columns=['latitude', 'longitude'])
 
         df = df.dropna()
 
@@ -30,6 +30,10 @@ class Dbscan:
         clusters_labels = dbscan.labels_
         df['cluster'] = clusters_labels
         return df
+    
+    def count_clusters(self)->int:
+        df = self.__get_results__()
+        return len(df['cluster'].unique()) - 1
     
     def generate_csv(self)->None:
         df = self.__get_results__()

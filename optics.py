@@ -19,9 +19,11 @@ class Optics:
         df = df.dropna()
 
         optics = OPTICS(
-                    min_samples=1.0,
+                    min_samples=2,
                     max_eps=self.__distance,
-                    metric='haversine'
+                    metric='haversine',
+                    cluster_method='dbscan',
+                    algorithm='ball_tree'
                 ).fit(np.radians(df))
         clusters_labels = optics.labels_
         df['cluster'] = clusters_labels
@@ -30,4 +32,15 @@ class Optics:
     def generate_csv(self)->None:
         df = self.__get_results__()
         df.to_csv('optics.csv', index=False)
+        
+    def count_clusters(self)->int:
+        df = self.__get_results__()
+        return len(df['cluster'].unique()) - 1
     
+    def get_clusters(self)->pd.DataFrame:
+        df = self.__get_results__()
+        return df['cluster'].unique()
+    
+    def get_clusters_count(self)->pd.DataFrame:
+        df = self.__get_results__()
+        return df['cluster'].value_counts()
