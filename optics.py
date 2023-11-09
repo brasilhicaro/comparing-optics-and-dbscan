@@ -5,7 +5,7 @@ from sklearn.cluster import OPTICS
 class Optics:
     __distance: float = 0.5 / 6371.0088
     __data_firms: pd.DataFrame
-    
+
     def __init__(self)->None:
         self.__data_firms = pd.DataFrame(pd.read_csv(
             'SUOMI_VIIRS_C2_South_America_24h.csv'))
@@ -31,7 +31,7 @@ class Optics:
     
     def generate_csv(self)->None:
         df = self.__get_results__()
-        df.to_csv('optics.csv', index=False)
+        df.to_csv('./data/optics.csv', index=False)
         
     def count_clusters(self)->int:
         df = self.__get_results__()

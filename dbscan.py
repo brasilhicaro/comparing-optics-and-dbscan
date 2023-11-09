@@ -37,4 +37,4 @@ class Dbscan:
     
     def generate_csv(self)->None:
         df = self.__get_results__()
-        df.to_csv('dbscan.csv', index=False)
+        df.to_csv('./data/dbscan.csv', index=False)
