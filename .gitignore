@@ -3,4 +3,4 @@ venv
 .idea
 *.iml
 *.pyc
-*.__pycache__
+__pycache__
