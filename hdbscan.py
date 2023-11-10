@@ -27,6 +27,18 @@ class Hdbscan:
                 ).fit(np.radians(df))
         clusters_labels = hdbscan.labels_
         df['cluster'] = clusters_labels
+        for i in range(len(df['cluster'])):
+            if df['cluster'][i] == -1:
+                df['distance'][i] = 0
+            else:
+                for j in range(len(df['cluster'])):
+                    if df['cluster'][i] == df['cluster'][j]:
+                        df['distance'][i] = self.calculate_distance(
+                            df['latitude'][i],
+                            df['longitude'][i],
+                            df['latitude'][j],
+                            df['longitude'][j]
+                        )
         return df
     
     def count_clusters(self)->int:
@@ -36,4 +48,6 @@ class Hdbscan:
     def generate_csv(self)->None:
         df = self.__get_results__()
         df.to_csv('./data/hdbscan.csv', index=False)
-    
+        
+    def calculate_distance(self, lat1: float, lon1: float, lat2: float, lon2: float)->float:
+        return hs.haversine((lat1, lon1), (lat2, lon2))    
