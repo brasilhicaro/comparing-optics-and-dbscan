@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.cluster import HDBSCAN
+import haversine as hs
 
 class Hdbscan:
     __data_firms: pd.DataFrame
@@ -27,18 +28,22 @@ class Hdbscan:
                 ).fit(np.radians(df))
         clusters_labels = hdbscan.labels_
         df['cluster'] = clusters_labels
+
+        distances = []
         for i in range(len(df['cluster'])):
             if df['cluster'][i] == -1:
-                df['distance'][i] = 0
+                distances.append(0)
             else:
                 for j in range(len(df['cluster'])):
                     if df['cluster'][i] == df['cluster'][j]:
-                        df['distance'][i] = self.calculate_distance(
+                        distances.append(self.calculate_distance(
                             df['latitude'][i],
                             df['longitude'][i],
                             df['latitude'][j],
                             df['longitude'][j]
-                        )
+                        ))
+        df['distance'] = distances
+        distances.clear()
         return df
     
     def count_clusters(self)->int:

@@ -30,18 +30,21 @@ class Dbscan:
                 ).fit(np.radians(df))
         clusters_labels = dbscan.labels_
         df['cluster'] = clusters_labels
-        for i in range(len(df['cluster'])):
-            if df['cluster'][i] == -1:
-                df['distance'][i] = 0
-            else:
-                for j in range(len(df['cluster'])):
-                    if df['cluster'][i] == df['cluster'][j]:
-                        df['distance'][i] = self.calculate_distance(
-                            df['latitude'][i],
-                            df['longitude'][i],
-                            df['latitude'][j],
-                            df['longitude'][j]
-                        )
+        distances = []
+        for i in range(len(df['cluster']) + 1):
+            for j in range(len(df['cluster']) + 1):
+                if df['cluster'][i] == df['cluster'][j] and (df['latitude'][i] != df['latitude'][j] or df['longitude'][i] != df['longitude'][j]):
+                    distancia = self.calculate_distance(
+                        df['latitude'][i],
+                        df['longitude'][i],
+                        df['latitude'][j],
+                        df['longitude'][j]
+                    )
+                    distances.append(distancia)
+                    print(distancia)
+        print(len(distances))
+        df['distance'] = distances
+        distances.clear()
         return df
     
     def count_clusters(self)->int:
