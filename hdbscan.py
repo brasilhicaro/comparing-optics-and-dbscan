@@ -29,21 +29,12 @@ class Hdbscan:
         clusters_labels = hdbscan.labels_
         df['cluster'] = clusters_labels
 
-        distances = []
-        for i in range(len(df['cluster'])):
-            if df['cluster'][i] == -1:
-                distances.append(0)
-            else:
-                for j in range(len(df['cluster'])):
-                    if df['cluster'][i] == df['cluster'][j]:
-                        distances.append(self.calculate_distance(
-                            df['latitude'][i],
-                            df['longitude'][i],
-                            df['latitude'][j],
-                            df['longitude'][j]
-                        ))
-        df['distance'] = distances
-        distances.clear()
+        df['centroid_distance'] = 0.0
+        for cluster in df['cluster'].unique():
+            mask = df['cluster'] == cluster
+            center_lat, center_lon = df.loc[mask, ['latitude', 'longitude']].mean()
+            df.loc[mask, 'centroid_distance'] = [self.calculate_distance(center_lat, center_lon, lat, lon) for lat, lon in zip(df.loc[mask, 'latitude'], df.loc[mask, 'longitude'])]
+
         return df
     
     def count_clusters(self)->int:

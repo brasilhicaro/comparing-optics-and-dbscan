@@ -28,7 +28,6 @@ class Optics:
         clusters_labels = optics.labels_
         df['cluster'] = clusters_labels
         df['distance'] = optics.core_distances_
-        df['distance'].to_csv('distancias.csv')
         return df
     
     def generate_csv(self)->None:
