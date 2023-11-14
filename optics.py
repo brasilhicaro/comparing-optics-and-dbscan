@@ -27,6 +27,7 @@ class Optics:
                 ).fit(np.radians(df))
         clusters_labels = optics.labels_
         df['cluster'] = clusters_labels
+        df['distance'] = optics.core_distances_
         return df
     
     def generate_csv(self)->None:
