@@ -31,7 +31,8 @@ class Dbscan:
         for cluster in df['cluster'].unique():
             mask = df['cluster'] == cluster
             center_lat, center_lon = df.loc[mask, ['latitude', 'longitude']].mean()
-            df.loc[mask, 'centroid_distance'] = [self.calculate_distance(center_lat, center_lon, lat, lon) for lat, lon in zip(df.loc[mask, 'latitude'], df.loc[mask, 'longitude'])]
+            df.loc[mask, 'centroid_distance'] = [self.calculate_distance(center_lat, center_lon, lat, lon) \
+                for lat, lon in zip(df.loc[mask, 'latitude'], df.loc[mask, 'longitude'])]
 
         return df
 

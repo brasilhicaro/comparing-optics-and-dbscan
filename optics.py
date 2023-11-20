@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.cluster import OPTICS
+import haversine as hs
 
 class Optics:
     __distance: float = 0.5 / 6371.0088
@@ -27,8 +28,17 @@ class Optics:
                 ).fit(np.radians(df))
         clusters_labels = optics.labels_
         df['cluster'] = clusters_labels
-        df['distance'] = optics.core_distances_
+        
+        df['centroid_distance'] = 0.0
+        for cluster in df['cluster'].unique():
+            mask = df['cluster'] == cluster
+            center_lat, center_lon = df.loc[mask, ['latitude', 'longitude']].mean()
+            df.loc[mask, 'centroid_distance'] = [self.calculate_distance(center_lat, center_lon, lat, lon) \
+                for lat, lon in zip(df.loc[mask, 'latitude'], df.loc[mask, 'longitude'])]
+
         return df
+    def calculate_distance(self, lat1: float, lon1: float, lat2: float, lon2: float)->float:
+        return hs.haversine((lat1, lon1), (lat2, lon2))
     
     def generate_csv(self)->None:
         df = self.__get_results__()
